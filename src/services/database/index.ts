@@ -1,4 +1,5 @@
 import { Db, MongoClient } from 'mongodb'
+import 'dotenv/config'
 
 export class Database {
 	private client: MongoClient
@@ -8,7 +9,7 @@ export class Database {
 	}
 
 	public connect(): void {
-		this.client.connect().then(() => console.log('Success connect to DB'))
+		this.client.connect().then()
 	}
 
 	public getInstance(): Db {

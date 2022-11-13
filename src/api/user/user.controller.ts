@@ -49,7 +49,7 @@ class UserController implements Controller {
 		this.service.getById(params.id).then(success(res, 200)).catch(next)
 
 	private update = ({ body, params }: Request, res: Response, next: NextFunction) =>
-		this.service.update(params.id, body).then(success(res, 200)).catch(next)
+		this.service.update(params.id, body).then(success(res, 202)).catch(next)
 
 	private destroy = ({ params }: Request, res: Response, next: NextFunction) =>
 		this.service.destroy(params.id).then(success(res, 204)).catch(next)
