@@ -7,23 +7,36 @@ import { success } from '../../services/responses'
 import validationMiddleware from '../../services/middlewares/validation.middleware'
 import { CreateUserDTO, UpdateUserDTO } from './dto/user.dto'
 import { Db } from 'mongodb'
+import Passport from '../../services/passport'
 
 class UserController implements Controller {
 	public path = '/users'
 	public router = Router()
 	private service: UserService
+	private passport: Passport
 
 	constructor(private db: Db) {
 		this.service = new UserService(db)
+		this.passport = new Passport(db)
 		this.initializeRoutes()
 	}
 
 	private initializeRoutes() {
-		this.router.post(this.path, validationMiddleware(CreateUserDTO), this.create)
-		this.router.get(this.path, this.getAll)
-		this.router.get(`${this.path}/:id`, this.getById)
-		this.router.put(`${this.path}/:id`, validationMiddleware(UpdateUserDTO), this.update)
-		this.router.delete(`${this.path}/:id`, this.destroy)
+		this.router.post(
+			this.path,
+			this.passport.userToken(),
+			validationMiddleware(CreateUserDTO),
+			this.create,
+		)
+		this.router.get(this.path, this.passport.userToken(), this.getAll)
+		this.router.get(`${this.path}/:id`, this.passport.userToken(), this.getById)
+		this.router.put(
+			`${this.path}/:id`,
+			this.passport.userToken(),
+			validationMiddleware(UpdateUserDTO),
+			this.update,
+		)
+		this.router.delete(`${this.path}/:id`, this.passport.userToken(), this.destroy)
 	}
 
 	private create = ({ body }: Request, res: Response, next: NextFunction) =>

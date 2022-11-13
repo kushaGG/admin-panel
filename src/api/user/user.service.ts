@@ -1,4 +1,4 @@
-import { Collection, Db, ObjectId } from 'mongodb'
+import { Collection, Db, Filter, ObjectId } from 'mongodb'
 import bcrypt from 'bcrypt'
 
 import User, { CreateUserDTO, UpdateUserDTO } from './dto/user.dto'
@@ -25,6 +25,10 @@ export default class UserService {
 	public async getById(id: string): Promise<User | null> {
 		const filter = { _id: new ObjectId(id) }
 
+		return this.userCollection.findOne(filter)
+	}
+
+	public async getOne(filter: Filter<User>) {
 		return this.userCollection.findOne(filter)
 	}
 
